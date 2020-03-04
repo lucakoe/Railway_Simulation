@@ -58,7 +58,22 @@ public class TestMain {
         CoordinateSystemMap map=new CoordinateSystemMap();
         map.addTrack(new Coordinate(10,1),new Coordinate(5,1));
         map.addTrack(new Coordinate(5,1),new Coordinate(5,2));
+
+        TreeMap<String,Integer> testTreeMap = new TreeMap<String, Integer>();
+        testTreeMap.put("Abba", 1);
+        testTreeMap.put("aAdol", 2);
+        testTreeMap.put("zkbba", 3);
+        testTreeMap.put("Dbba", 4);
+        String[] testStringArray= testTreeMap.navigableKeySet().toArray(new String[testTreeMap.size()]);
+        for (int i=0;i<testStringArray.length;i++){
+            Terminal.printLine(testStringArray[i]);
+        }
+
+
+
         Terminal.printLine("end");
+
+
 
     }
 }

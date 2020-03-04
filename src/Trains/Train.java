@@ -7,14 +7,15 @@ public class Train {
 
     private ArrayList<RollingStock> rollingStocks;
     private boolean placed;
-
+    private final int ID;
 
 
     //TODO Complete
 
 
-    public Train() {
+    public Train(int id) {
         this.rollingStocks = new ArrayList<RollingStock>();
+        this.ID = id;
     }
 
     public boolean move() {
@@ -155,7 +156,25 @@ public class Train {
         }
         return out;
     }
-    //TODO maybe boolen
+
+    public int getID() {
+        return ID;
+    }
+
+    public String getInfo() {
+        String iDString = Integer.toString(this.getID());
+        String rollingStockString = "";
+        for (int i = 0; i < rollingStocks.size(); i++) {
+            if (rollingStocks.get(i).getRollingStockType() == RollingStockTypes.COACH) {
+                rollingStockString += " " +
+                        CoachTypes.getIDPrefix() +
+                        (Integer.toString(((Coach) rollingStocks.get(i)).getID()));
+            } else {
+                rollingStockString += " "+(((MotorizedRollingStock) rollingStocks.get(i)).getID());
+            }
+        }
+        return iDString + rollingStockString;
+    }
 
 
 }

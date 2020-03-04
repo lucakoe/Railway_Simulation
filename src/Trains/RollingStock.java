@@ -11,6 +11,10 @@ public abstract class RollingStock {
     private static final int SPRITE_SIZE_VERTICAL = 8;
     //number of columns (number of chars)
     private static final int SPRITE_SIZE_HORIZONTAL = 20;
+
+
+
+    private static final String NO_TRAIN_ASSIGNED_STRING = "none";
     private final int LENGTH;
     private Point[] positions;
     private Direction drivingDirection;
@@ -24,7 +28,7 @@ public abstract class RollingStock {
         this.SPRITE = sprite;
         this.LENGTH = length;
         this.positions = new Point[this.LENGTH];
-        this.couplings=new TreeMap<CouplingDirection, RollingStock>();
+        this.couplings = new TreeMap<CouplingDirection, RollingStock>();
         if (couplingFront) {
             couplings.put(CouplingDirection.FRONT, null);
         }
@@ -40,6 +44,14 @@ public abstract class RollingStock {
 
     public Train getTrain() {
         return train;
+    }
+
+    public String getInfo() {
+        return new String();
+    }
+
+    public static String getNoTrainAssignedString() {
+        return NO_TRAIN_ASSIGNED_STRING;
     }
 
     public static int getSpriteSizeVertical() {
