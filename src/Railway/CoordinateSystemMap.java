@@ -1,5 +1,7 @@
 package Railway;
 
+import Exceptions.WrongCoordinatesException;
+
 import java.util.ArrayList;
 import java.util.TreeMap;
 
@@ -34,10 +36,14 @@ public class CoordinateSystemMap {
 
 
     public boolean addTrack(Coordinate startPoint, Coordinate endPoint) {
-        //try{
-        tracks.add(new Track(this,startPoint,endPoint));
-        //}
-        //catch ()
+        Track track;
+        try{
+        track=new Track(this,startPoint,endPoint);
+        }
+        catch (WrongCoordinatesException e){
+            return false;
+        }
+        tracks.add(track);
         return true;
 
     }
