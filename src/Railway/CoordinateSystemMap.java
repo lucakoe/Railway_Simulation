@@ -1,5 +1,6 @@
 package Railway;
 
+import Exceptions.TrackIsOccupiedException;
 import Exceptions.WrongCoordinatesException;
 
 import java.util.ArrayList;
@@ -10,9 +11,9 @@ public class CoordinateSystemMap {
     private ArrayList<Track> tracks;
 
 
-    public CoordinateSystemMap(){
-        this.map=new TreeMap<Integer, TreeMap<Integer, Point>>();
-        this.tracks=new ArrayList<Track>();
+    public CoordinateSystemMap() {
+        this.map = new TreeMap<Integer, TreeMap<Integer, Point>>();
+        this.tracks = new ArrayList<Track>();
     }
 
     //TODO maybe implement exception instead of boolean
@@ -37,13 +38,24 @@ public class CoordinateSystemMap {
 
     public boolean addTrack(Coordinate startPoint, Coordinate endPoint) {
         Track track;
-        try{
-        track=new Track(this,startPoint,endPoint);
-        }
-        catch (WrongCoordinatesException e){
+        try {
+            track = new Track(this, startPoint, endPoint);
+        } catch (WrongCoordinatesException e) {
             return false;
         }
         tracks.add(track);
+        return true;
+
+    }
+
+    public boolean removeTrack(Track track) {
+
+        try {
+            track.disconnectAndSafeDeletePoints();
+        } catch (TrackIsOccupiedException e) {
+            return false;
+        }
+        tracks.remove(track);
         return true;
 
     }
@@ -58,6 +70,15 @@ public class CoordinateSystemMap {
         }
     }
 
+    public void safeRemovePoint(Coordinate coordinate) {
+        //if the point exists, it has no tracks and no ConnectionPoints it will be removed
+        if (this.containsPoint(coordinate) &&
+                this.getPoint(coordinate).getTracks().length == 0 &&
+                this.getPoint(coordinate).getNumberOfConnectionPoints() == 0) {
+            map.get(coordinate.getX()).remove(coordinate.getY());
+        }
+    }
+
     public Point getPoint(Coordinate coordinate) {
         if (containsPoint(coordinate)) {
             return map.get(coordinate.getX()).get(coordinate.getY());
@@ -68,7 +89,7 @@ public class CoordinateSystemMap {
 
 
     public int numberOfTracks() {
-        if (tracks==null){
+        if (tracks == null) {
             return 0;
         }
         return tracks.size();

@@ -1,5 +1,6 @@
 package Railway;
 
+import Exceptions.TrackIsOccupiedException;
 import Exceptions.WrongCoordinatesException;
 import Trains.Train;
 
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 public class Track {
 
     private ArrayList<Point> points;
-    Train occupied;
+    ArrayList<Train> occupied;
     boolean active;
 
 
@@ -17,6 +18,7 @@ public class Track {
     public Track(CoordinateSystemMap map, Coordinate startPoint, Coordinate endPoint) throws WrongCoordinatesException {
         this.map = map;
         this.points = new ArrayList<Point>();
+        this.occupied=new ArrayList<Train>();
         if (startPoint == null || endPoint == null) {
             throw new WrongCoordinatesException();
         }
@@ -112,6 +114,26 @@ public class Track {
         return active;
     }
 
+    public boolean isOccupied(){
+        return !occupied.isEmpty();
+    }
+
+    public void disconnectAndSafeDeletePoints() throws TrackIsOccupiedException {
+
+        if(!this.isOccupied()){
+            for(int i=0;i<points.size()-1;i++){
+                points.get(i).disconnectFromPoint(points.get(i+1));
+                points.get(i).removeTrack(this);
+                map.safeRemovePoint(points.get(i).getCoordinate());
+            }
+            getEndPoint().removeTrack(this);
+            map.safeRemovePoint(getEndPoint().getCoordinate());
+        }
+        else {
+            throw new TrackIsOccupiedException();
+        }
+
+    }
 
     public Point getStartPoint() {
         if (points.isEmpty()) {
