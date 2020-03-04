@@ -20,6 +20,7 @@ public class Point implements Comparable<Point> {
         this.coordinate = coordinate;
         this.connectionPoints = new TreeMap<Direction, Point>();
         this.tracks=new ArrayList<Track>();
+
     }
 
     @Override
@@ -92,6 +93,9 @@ public class Point implements Comparable<Point> {
     protected int getNumberOfCreatableConnectionPoints() {
         return (NUMBER_OF_POSSIBLE_RAILWAY_CONNECTIONS - connectionPoints.size());
     }
+    public int getNumberOfConnectionPoints(){
+        return connectionPoints.size();
+    }
 
 
     public void setActive(boolean newActive){
@@ -101,10 +105,20 @@ public class Point implements Comparable<Point> {
     public boolean isActive() {
         return active;
     }
-    public boolean assignTrack(Track track){
-        tracks.add(track);
-        return true;
+
+    public void assignTrack(Track track){
+        if(!tracks.contains(track)){
+            tracks.add(track);
+        }
     }
+
+    public void removeTrack(Track track){
+        if(!tracks.contains(track)){
+            tracks.remove(track);
+        }
+    }
+
+
 
     //TODO Carefull with this method could cause problems
     public boolean connectToPoint(Point point) {
