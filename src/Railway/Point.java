@@ -59,6 +59,12 @@ public class Point implements Comparable<Point> {
         return coordinate;
     }
 
+    public Track[] getTracks(){
+        //TODO test if it works
+        return (Track[])tracks.toArray();
+    }
+
+
     public boolean creatableConnectionPointInDirection(Direction direction){
         if (!connectionPoints.containsKey(direction)&& getNumberOfCreatableConnectionPoints()>0){
             return true;
@@ -88,6 +94,9 @@ public class Point implements Comparable<Point> {
     }
 
 
+    public void setActive(boolean newActive){
+        active=newActive;
+    }
 
     public boolean isActive() {
         return active;

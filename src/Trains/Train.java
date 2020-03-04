@@ -136,6 +136,7 @@ public class Train {
                 //all the rolling stock sprites are added behind each other
                 for (int j = 0; j < heightHighestSprite; j++) {
                     outSplitSprites[j] += splitSprites[i][j] + " ";
+                    //TODO maybe remove all spaces after the last symbol
                 }
             }
             //the single split lines are added together to a single String

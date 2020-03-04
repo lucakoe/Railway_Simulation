@@ -57,6 +57,7 @@ public class TestMain {
 
         CoordinateSystemMap map=new CoordinateSystemMap();
         map.addTrack(new Coordinate(10,1),new Coordinate(5,1));
+        map.addTrack(new Coordinate(5,1),new Coordinate(5,2));
         Terminal.printLine("end");
 
     }

@@ -1,7 +1,7 @@
 package Exceptions;
 
 public class WrongCoordinatesException extends Exception {
-    WrongCoordinatesException(){
+    public WrongCoordinatesException(){
         super("The Coordinates you entered are wrong");
     }
 
