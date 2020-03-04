@@ -59,8 +59,8 @@ public class Point implements Comparable<Point> {
         return coordinate;
     }
 
-    public boolean connectionPointInDirectionIsFree(Direction direction){
-        if (connectionPoints.containsKey(direction)&&connectionPoints.get(direction)==null){
+    public boolean creatableConnectionPointInDirection(Direction direction){
+        if (!connectionPoints.containsKey(direction)&& getNumberOfCreatableConnectionPoints()>0){
             return true;
         }
         return false;
@@ -83,7 +83,7 @@ public class Point implements Comparable<Point> {
     */
     }
 
-    protected int getNumberOfFreeConnectionPoints() {
+    protected int getNumberOfCreatableConnectionPoints() {
         return (NUMBER_OF_POSSIBLE_RAILWAY_CONNECTIONS - connectionPoints.size());
     }
 
@@ -106,9 +106,9 @@ public class Point implements Comparable<Point> {
         point already set in the first point would prevent the method from executing even though, it's the same
         connection as the one trying to be created by the second one
         */
-        boolean freeConnectionPointsAvailable = this.getNumberOfFreeConnectionPoints() > 0 &&
-                (point.getNumberOfFreeConnectionPoints() > 0 ||
-                        (point.getNumberOfFreeConnectionPoints() >= 0 &&
+        boolean freeConnectionPointsAvailable = this.getNumberOfCreatableConnectionPoints() > 0 &&
+                (point.getNumberOfCreatableConnectionPoints() > 0 ||
+                        (point.getNumberOfCreatableConnectionPoints() >= 0 &&
                                 point.getConnectionPoint(direction.getOpposite()) == this));
         /*
         checks if the ConnectionPoint in the direction of the other Point is free and if the ConnectionPoint of the
