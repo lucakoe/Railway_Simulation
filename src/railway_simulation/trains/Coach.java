@@ -1,4 +1,4 @@
-package Trains;
+package railway_simulation.trains;
 
 public class Coach extends RollingStock {
     private final CoachTypes COACH_TYPE;

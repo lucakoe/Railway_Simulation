@@ -1,4 +1,4 @@
-package Trains;
+package railway_simulation.trains;
 
 
 import java.util.ArrayList;

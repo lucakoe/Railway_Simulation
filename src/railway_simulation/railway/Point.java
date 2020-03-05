@@ -1,6 +1,6 @@
-package Railway;
+package railway_simulation.railway;
 
-import Trains.Train;
+import railway_simulation.trains.Train;
 
 import java.util.ArrayList;
 import java.util.TreeMap;

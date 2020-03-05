@@ -1,14 +1,16 @@
-package Test;
+package railway_simulation.test;
 
-import Railway.*;
-import Trains.*;
+import railway_simulation.railway.*;
 import edu.kit.informatik.Terminal;
 
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 //TODO check in every class if any variables should be set final and privat/protected
 //TODO check every method for null pointer exception
 //TODO maybe use exception instead of boolean (everywhere)
+//TODO check for Wildcards and remove them
 public class TestMain {
     public static void main(String[] args) {
 
@@ -28,7 +30,7 @@ public class TestMain {
         /*
         {
             String out="";
-            String testString = "This\nis\na\n Test";
+            String testString = "This\nis\na\n test";
             String[] testStringSplit=testString.split("\n");
             for (int i =0;i<testStringSplit.length;i++){
                 out+=testStringSplit[i];
@@ -68,7 +70,10 @@ public class TestMain {
         for (int i=0;i<testStringArray.length;i++){
             Terminal.printLine(testStringArray[i]);
         }
-
+        Pattern testPattern = Pattern.compile("^[1-9]\\d*$");
+        Matcher testMatcher = testPattern.matcher(Long.toString(((long)Integer.MAX_VALUE)+10));
+        Terminal.printLine(testMatcher.matches());
+        Terminal.printLine(Integer.parseInt(Long.toString(((long)Integer.MAX_VALUE)+10)));
 
 
         Terminal.printLine("end");

@@ -1,4 +1,4 @@
-package Exceptions;
+package railway_simulation.exceptions;
 //TODO maybe exchange for io/input exception
 public class WrongCoordinatesException extends Exception {
     public WrongCoordinatesException(){

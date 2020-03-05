@@ -1,4 +1,4 @@
-package Railway;
+package railway_simulation.railway;
 
 //TODO make better (with opposite and constructor)
 public enum Direction {

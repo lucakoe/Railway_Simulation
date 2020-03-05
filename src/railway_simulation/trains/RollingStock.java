@@ -1,7 +1,7 @@
-package Trains;
+package railway_simulation.trains;
 
-import Railway.Direction;
-import Railway.Point;
+import railway_simulation.railway.Direction;
+import railway_simulation.railway.Point;
 
 import java.util.TreeMap;
 
@@ -11,9 +11,7 @@ public abstract class RollingStock {
     private static final int SPRITE_SIZE_VERTICAL = 8;
     //number of columns (number of chars)
     private static final int SPRITE_SIZE_HORIZONTAL = 20;
-
-
-
+    //shows up in the list/info text if the rolling stock isn't added to a train
     private static final String NO_TRAIN_ASSIGNED_STRING = "none";
     private final int LENGTH;
     private Point[] positions;
@@ -77,12 +75,7 @@ public abstract class RollingStock {
         return false;
     }
 
-    //TODO complete or remove
-    /*
-    public Point getRailway (){
 
-    }
-    */
     public void move() {
 
     }

@@ -1,15 +1,14 @@
-package Trains;
+package railway_simulation.trains;
 
-import java.util.ArrayList;
 import java.util.TreeMap;
 
-public class TrainAssembly {
+public class TrainHangar {
     TreeMap<Integer, Train> trainTreeMap;
     TreeMap<Integer, Coach> coachTreeMap;
     TreeMap<String, MotorizedRollingStock> motorizedRollingStockTreeMap;
 
 
-    public TrainAssembly() {
+    public TrainHangar() {
 
     }
 

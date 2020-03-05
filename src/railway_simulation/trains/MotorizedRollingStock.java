@@ -1,4 +1,4 @@
-package Trains;
+package railway_simulation.trains;
 
 public abstract class MotorizedRollingStock extends RollingStock {
 
@@ -14,14 +14,14 @@ public abstract class MotorizedRollingStock extends RollingStock {
         //TODO maybe use exceptions to look for right class and name
         this.NAME = name;
         this.MOTORIZED_ROLLING_STOCK_CLASS = trainSetClass;
-        this.ID=this.NAME+"-"+this.MOTORIZED_ROLLING_STOCK_CLASS;
+        this.ID = this.NAME + "-" + this.MOTORIZED_ROLLING_STOCK_CLASS;
     }
 
     public String getName() {
         return NAME;
     }
 
-    public String getID(){
+    public String getID() {
         return this.ID;
     }
 

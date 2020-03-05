@@ -1,4 +1,4 @@
-package Exceptions;
+package railway_simulation.exceptions;
 
 public class TrackIsOccupiedException extends Exception {
     public TrackIsOccupiedException() {

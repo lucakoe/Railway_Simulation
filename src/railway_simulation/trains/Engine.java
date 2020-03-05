@@ -1,4 +1,4 @@
-package Trains;
+package railway_simulation.trains;
 
 public class Engine extends MotorizedRollingStock {
     private final EngineTypes ENGINE_TYPE;

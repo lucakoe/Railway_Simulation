@@ -1,4 +1,4 @@
-package Trains;
+package railway_simulation.trains;
 
 public enum EngineTypes {
     ELECTRIC(EngineTypes.ELECTRIC_SPRITE), DIESEL(EngineTypes.DIESEL_SPRITE), STEAM(EngineTypes.STEAM_SPRITE);

@@ -1,4 +1,4 @@
-package Trains;
+package railway_simulation.trains;
 
 public enum CoachTypes {
     PASSENGERS(CoachTypes.PASSENGER_SPRITE, CoachTypes.PASSENGER_INFO_STRING),

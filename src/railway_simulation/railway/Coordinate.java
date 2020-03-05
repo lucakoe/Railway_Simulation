@@ -1,4 +1,4 @@
-package Railway;
+package railway_simulation.railway;
 
 public class Coordinate implements Comparable<Coordinate>  {
     private int x;

@@ -1,7 +1,7 @@
-package Railway;
+package railway_simulation.railway;
 
-import Exceptions.TrackIsOccupiedException;
-import Exceptions.WrongCoordinatesException;
+import railway_simulation.exceptions.TrackIsOccupiedException;
+import railway_simulation.exceptions.WrongCoordinatesException;
 
 import java.util.ArrayList;
 import java.util.TreeMap;
