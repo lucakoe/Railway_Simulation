@@ -1,5 +1,6 @@
 package railway_simulation.test;
 
+import railway_simulation.exceptions.WrongCoordinatesException;
 import railway_simulation.railway.*;
 import edu.kit.informatik.Terminal;
 
@@ -11,6 +12,7 @@ import java.util.regex.Pattern;
 //TODO check every method for null pointer exception
 //TODO maybe use exception instead of boolean (everywhere)
 //TODO check for Wildcards and remove them
+//TODO make uniform this. or nothing rule and change it everywhere
 public class TestMain {
     public static void main(String[] args) {
 
@@ -58,8 +60,20 @@ public class TestMain {
         //Terminal.printLine(testMap.containsKey(Direction.NORTH));
 
         CoordinateSystemMap map=new CoordinateSystemMap();
-        map.addTrack(new Coordinate(10,1),new Coordinate(5,1));
-        map.addTrack(new Coordinate(5,1),new Coordinate(5,2));
+        try {
+            map.addTrack(new Coordinate(10,1),new Coordinate(5,1));
+            map.addTrack(new Coordinate(5,-5),new Coordinate(5,1));
+            map.addTrack(new Coordinate(5,-5),new Coordinate(11,-5));
+            map.addTrack(new Coordinate(11,-5),new Coordinate(11,1));
+            map.addTrack(new Coordinate(15,1),new Coordinate(11,1));
+            map.addTrack(new Coordinate(-10,1),new Coordinate(15,1));
+        }
+        catch (WrongCoordinatesException e){
+            Terminal.printLine("Fuck");
+        }
+        Terminal.printLine(map.tracks.size());
+        //Terminal.printLine(map.tracks.get(0).existsTrackConnectionFromStartToEnd());
+
 
         TreeMap<String,Integer> testTreeMap = new TreeMap<String, Integer>();
         testTreeMap.put("Abba", 1);
@@ -73,7 +87,7 @@ public class TestMain {
         Pattern testPattern = Pattern.compile("^[1-9]\\d*$");
         Matcher testMatcher = testPattern.matcher(Long.toString(((long)Integer.MAX_VALUE)+10));
         Terminal.printLine(testMatcher.matches());
-        Terminal.printLine(Integer.parseInt(Long.toString(((long)Integer.MAX_VALUE)+10)));
+        //Terminal.printLine(Integer.parseInt(Long.toString(((long)Integer.MAX_VALUE)+10)));
 
 
         Terminal.printLine("end");

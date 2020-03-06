@@ -3,6 +3,7 @@ package railway_simulation.railway;
 import railway_simulation.trains.Train;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.TreeMap;
 
 
@@ -19,7 +20,7 @@ public class Point implements Comparable<Point> {
     public Point(Coordinate coordinate) {
         this.coordinate = coordinate;
         this.connectionPoints = new TreeMap<Direction, Point>();
-        this.tracks=new ArrayList<Track>();
+        this.tracks = new ArrayList<Track>();
 
     }
 
@@ -35,17 +36,14 @@ public class Point implements Comparable<Point> {
     }
 
     public Direction getNextMovingDirection(Direction currentMovingDirection) {
-        if (connectionPoints.containsKey(Direction.NORTH) && currentMovingDirection != Direction.NORTH) {
-            return Direction.NORTH;
-        } else if (connectionPoints.containsKey(Direction.SOUTH) && currentMovingDirection != Direction.SOUTH) {
-            return Direction.SOUTH;
-        } else if (connectionPoints.containsKey(Direction.EAST) && currentMovingDirection != Direction.EAST) {
-            return Direction.EAST;
-        } else if (connectionPoints.containsKey(Direction.WEST) && currentMovingDirection != Direction.WEST) {
-            return Direction.WEST;
-        } else {
-            return currentMovingDirection;
+        for (Direction direction : Direction.values()) {
+            if (connectionPoints.containsKey(direction) &&
+                    currentMovingDirection != direction &&
+                    connectionPoints.get(direction).isActive()) {
+                return direction;
+            }
         }
+        return currentMovingDirection;
     }
 
     public int getX() {
@@ -60,14 +58,14 @@ public class Point implements Comparable<Point> {
         return coordinate;
     }
 
-    public Track[] getTracks(){
+    public Track[] getTracks() {
         //TODO test if it works
-        return (Track[])tracks.toArray();
+        return tracks.toArray(new Track[tracks.size()]);
     }
 
 
-    public boolean creatableConnectionPointInDirection(Direction direction){
-        if (!connectionPoints.containsKey(direction)&& getNumberOfCreatableConnectionPoints()>0){
+    public boolean creatableConnectionPointInDirection(Direction direction) {
+        if (!connectionPoints.containsKey(direction) && getNumberOfCreatableConnectionPoints() > 0) {
             return true;
         }
         return false;
@@ -79,6 +77,7 @@ public class Point implements Comparable<Point> {
         }
         return null;
         //TODO rename or integrate isActive check in Train/RollingStock (and set get Point to protected)
+
     /*
     public Point getConnectionPoint(Direction direction) {
         if (connectionPoints.containsKey(direction) && connectionPoints.get(direction).isActive()) {
@@ -90,34 +89,35 @@ public class Point implements Comparable<Point> {
     */
     }
 
+
     protected int getNumberOfCreatableConnectionPoints() {
         return (NUMBER_OF_POSSIBLE_RAILWAY_CONNECTIONS - connectionPoints.size());
     }
-    public int getNumberOfConnectionPoints(){
+
+    public int getNumberOfConnectionPoints() {
         return connectionPoints.size();
     }
 
 
-    public void setActive(boolean newActive){
-        active=newActive;
+    public void setActive(boolean newActive) {
+        active = newActive;
     }
 
     public boolean isActive() {
         return active;
     }
 
-    public void assignTrack(Track track){
-        if(!tracks.contains(track)){
+    public void assignTrack(Track track) {
+        if (!tracks.contains(track)) {
             tracks.add(track);
         }
     }
 
-    public void removeTrack(Track track){
-        if(!tracks.contains(track)){
+    public void removeTrack(Track track) {
+        if (!tracks.contains(track)) {
             tracks.remove(track);
         }
     }
-
 
 
     //TODO Carefull with this method could cause problems
@@ -175,8 +175,7 @@ public class Point implements Comparable<Point> {
     }
 
 
-
-    //should not be used outside of connectPoint
+    //should not be used outside of dis-/connectPoint
     private void setConnectionPoint(Direction direction, Point point) {
         if (point == null) {
             connectionPoints.remove(direction);
@@ -195,5 +194,25 @@ public class Point implements Comparable<Point> {
             return false;
         }
     }
+
+    public boolean existsTrackConnectionToPoint(Track[] trackToBeIgnored, Collection<Point> list, Point endPoint) {
+        list.add(this);
+        if (this == endPoint) {
+            return true;
+        }
+        for (Track track : this.getTracks()) {
+            for (int i = 0; i < trackToBeIgnored.length; i++) {
+                if (track != trackToBeIgnored[i] && !list.contains(track.getStartOrEndPoint(this))) {
+                    if (track.getStartOrEndPoint(this).existsTrackConnectionToPoint(trackToBeIgnored, list, endPoint)) {
+                        return true;
+                    }
+                }
+            }
+
+
+        }
+        return false;
+    }
+
 }
 

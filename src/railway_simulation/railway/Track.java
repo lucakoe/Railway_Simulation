@@ -5,25 +5,29 @@ import railway_simulation.exceptions.WrongCoordinatesException;
 import railway_simulation.trains.Train;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
-public class Track {
+public class Track implements TrackMaterial {
 
     private ArrayList<Point> points;
-    ArrayList<Train> occupied;
+    ArrayList<Train> occupingTrains;
     boolean active;
+    private final CoordinateSystemMap MAP;
+    private final long LENGTH;
 
 
-    CoordinateSystemMap map;
+    private final TrackMaterialTypes TYPE = TrackMaterialTypes.TRACK;
 
-    public Track(CoordinateSystemMap map, Coordinate startPoint, Coordinate endPoint) throws WrongCoordinatesException {
-        this.map = map;
+    public Track(CoordinateSystemMap map, Coordinate startPointCoordinate, Coordinate endPointCoordinate) throws WrongCoordinatesException {
+        this.MAP = map;
         this.points = new ArrayList<Point>();
-        this.occupied=new ArrayList<Train>();
-        if (startPoint == null || endPoint == null) {
+        this.occupingTrains = new ArrayList<Train>();
+
+        if (startPointCoordinate == null || endPointCoordinate == null) {
             throw new WrongCoordinatesException();
         }
 
-        Direction directionOfTrack = startPoint.getDirectionToCoordinate(endPoint);
+        Direction directionOfTrack = startPointCoordinate.getDirectionToCoordinate(endPointCoordinate);
 
         //TODO complete
         if (directionOfTrack != null) {
@@ -31,39 +35,39 @@ public class Track {
             boolean firstTrackCondition = map.numberOfTracks() == 0;
             //checks if there already is a point at the start/endpoint and if so, it has a free creatable connection
             //point (the point is not created yet and there is a creatable connection point available)
-            boolean availableConnectionToOtherTrack = (map.containsPoint(startPoint) &&
-                    map.getPoint(startPoint).creatableConnectionPointInDirection(directionOfTrack)) ||
-                    (map.containsPoint(endPoint) &&
-                            map.getPoint(startPoint).creatableConnectionPointInDirection(directionOfTrack.getOpposite()));
+            boolean availableConnectionToOtherTrack = (map.containsPoint(startPointCoordinate) &&
+                    map.getPoint(startPointCoordinate).creatableConnectionPointInDirection(directionOfTrack)) ||
+                    (map.containsPoint(endPointCoordinate) &&
+                            map.getPoint(endPointCoordinate).creatableConnectionPointInDirection(directionOfTrack.getOpposite()));
 
             if (firstTrackCondition || availableConnectionToOtherTrack) {
                 //TODO maybe switch case
                 if (directionOfTrack == Direction.EAST) {
                     //TODO maybe remove code repetition
-                    for (int i = 0; i < startPoint.distanceToOtherCoordinate(endPoint) + 1; i++) {
-                        Coordinate coordinate = new Coordinate(startPoint.getX() + i, startPoint.getY());
+                    for (int i = 0; i < startPointCoordinate.distanceToOtherCoordinate(endPointCoordinate) + 1; i++) {
+                        Coordinate coordinate = new Coordinate(startPointCoordinate.getX() + i, startPointCoordinate.getY());
                         map.addPoint(coordinate);
                         points.add(map.getPoint(coordinate));
                         points.get(i).assignTrack(this);
                     }
                 } else if (directionOfTrack == Direction.WEST) {
-                    for (int i = 0; i < startPoint.distanceToOtherCoordinate(endPoint) + 1; i++) {
-                        Coordinate coordinate = new Coordinate(startPoint.getX() - i, startPoint.getY());
+                    for (int i = 0; i < startPointCoordinate.distanceToOtherCoordinate(endPointCoordinate) + 1; i++) {
+                        Coordinate coordinate = new Coordinate(startPointCoordinate.getX() - i, startPointCoordinate.getY());
                         map.addPoint(coordinate);
                         points.add(map.getPoint(coordinate));
                         points.get(i).assignTrack(this);
                     }
                 }
                 if (directionOfTrack == Direction.NORTH) {
-                    for (int i = 0; i < startPoint.distanceToOtherCoordinate(endPoint) + 1; i++) {
-                        Coordinate coordinate = new Coordinate(startPoint.getX(), startPoint.getY() + i);
+                    for (int i = 0; i < startPointCoordinate.distanceToOtherCoordinate(endPointCoordinate) + 1; i++) {
+                        Coordinate coordinate = new Coordinate(startPointCoordinate.getX(), startPointCoordinate.getY() + i);
                         map.addPoint(coordinate);
                         points.add(map.getPoint(coordinate));
                         points.get(i).assignTrack(this);
                     }
                 } else if (directionOfTrack == Direction.SOUTH) {
-                    for (int i = 0; i < startPoint.distanceToOtherCoordinate(endPoint) + 1; i++) {
-                        Coordinate coordinate = new Coordinate(startPoint.getX(), startPoint.getY() - i);
+                    for (int i = 0; i < startPointCoordinate.distanceToOtherCoordinate(endPointCoordinate) + 1; i++) {
+                        Coordinate coordinate = new Coordinate(startPointCoordinate.getX(), startPointCoordinate.getY() - i);
                         map.addPoint(coordinate);
                         points.add(map.getPoint(coordinate));
                         points.get(i).assignTrack(this);
@@ -81,6 +85,7 @@ public class Track {
             throw new WrongCoordinatesException();
         }
 
+        this.LENGTH = this.getStartCoordinate().distanceToOtherCoordinate(this.getEndCoordinate());
 
     }
 
@@ -114,28 +119,96 @@ public class Track {
         return active;
     }
 
-    public boolean isOccupied(){
-        return !occupied.isEmpty();
+    @Override
+    public long getLength() {
+        return LENGTH;
     }
 
-    public void disconnectAndSafeDeletePoints() throws TrackIsOccupiedException {
+    @Override
+    public int getTrackMaterialID() {
+        return 0;
+    }
 
-        if(!this.isOccupied()){
-            for(int i=0;i<points.size()-1;i++){
-                points.get(i).disconnectFromPoint(points.get(i+1));
-                points.get(i).removeTrack(this);
-                map.safeRemovePoint(points.get(i).getCoordinate());
-            }
-            getEndPoint().removeTrack(this);
-            map.safeRemovePoint(getEndPoint().getCoordinate());
-        }
-        else {
+    @Override
+    public Coordinate getStartCoordinate() {
+        return getStartPoint().getCoordinate();
+    }
+
+    @Override
+    public Coordinate getEndCoordinate() {
+        return getEndPoint().getCoordinate();
+    }
+
+    @Override
+    public boolean isOccupied() {
+        return !occupingTrains.isEmpty();
+    }
+
+    @Override
+    public void disconnectAndSafeDeletePoints() throws TrackIsOccupiedException {
+        if (!this.isOccupied()&&(!this.startAndEndPointIsConnectedToOtherTrack()||
+                this.existsTrackConnectionFromStartToEnd())) {
+            disconnectAndSafeDeletePointsIgnoreConditions();
+        } else {
             throw new TrackIsOccupiedException();
         }
 
     }
 
-    public Point getStartPoint() {
+    // for Switches
+    public void disconnectAndSafeDeletePointsIgnoreConditions() {
+        //TODO if this method's conditons change switches disconnectAndSafeDeletePoints
+        //TODO add deep search algorithm to look if points can be disconnected without creating a seperated Track
+
+
+
+            for (int i = 0; i < points.size() - 1; i++) {
+                points.get(i).disconnectFromPoint(points.get(i + 1));
+                points.get(i).removeTrack(this);
+                MAP.safeRemovePoint(points.get(i).getCoordinate());
+            }
+            getEndPoint().removeTrack(this);
+            MAP.safeRemovePoint(getEndPoint().getCoordinate());
+
+
+    }
+
+    public boolean startAndEndPointIsConnectedToOtherTrack() {
+        return !(this.getStartPoint().getNumberOfConnectionPoints() == 1 ||
+                this.getEndPoint().getNumberOfConnectionPoints() == 1);
+    }
+
+    //TODO complete Depth-First Search
+
+    private boolean existsTrackConnectionFromStartToEnd() {
+        return this.existsTrackConnectionFromStartToEnd(this);
+
+    }
+    //for switch removal
+    protected boolean existsTrackConnectionFromStartToEnd(Track... additionalTracksToBeIgnored) {
+        Track tracksToBeIgnored[] =new Track[additionalTracksToBeIgnored.length+1];
+        for(int i =0;i<additionalTracksToBeIgnored.length;i++){
+            tracksToBeIgnored[i+1]=additionalTracksToBeIgnored[i];
+        }
+        tracksToBeIgnored[0]=this;
+        HashSet<Point> listOfVisitedPoints = new HashSet<Point>();
+        return this.getStartPoint().existsTrackConnectionToPoint(tracksToBeIgnored, listOfVisitedPoints, this.getEndPoint());
+
+    }
+
+
+    //as parameter you enter ether the start or the endpoint and recived the other point.
+    //if the point entered is nether the start nor the end point, it returns null
+    protected Point getStartOrEndPoint(Point startOrEndPoint) {
+        if (getStartPoint() != null && startOrEndPoint == getStartPoint()) {
+            return getEndPoint();
+        } else if (getEndPoint() != null && startOrEndPoint == getEndPoint()) {
+            return getStartPoint();
+        }
+        return null;
+    }
+
+    protected Point getStartPoint() {
         if (points.isEmpty()) {
             return null;
         } else {
@@ -151,6 +224,11 @@ public class Track {
             return points.get(points.size() - 1);
         }
 
+    }
+
+    @Override
+    public TrackMaterialTypes getTrackMaterialType() {
+        return TYPE;
     }
 }
 

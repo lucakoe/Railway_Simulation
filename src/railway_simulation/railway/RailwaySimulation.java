@@ -11,11 +11,11 @@ public class RailwaySimulation {
 
     //TODO use/complete or delete
     /*
-    public String addTrack(Coordinate startPoint, Coordinate endPoint) {
+    public String addTrack(Coordinate startPointCoordinate, Coordinate endPointCoordinate) {
 
     }
 
-    public String addSwitch(Coordinate startPoint, Coordinate firstEndPoint, Coordinate secondEndPoint) {
+    public String addSwitch(Coordinate startPointCoordinate, Coordinate firstEndPointCoordinate, Coordinate secondEndPointCoordiante) {
 
     }
 
@@ -80,7 +80,7 @@ public class RailwaySimulation {
     }
 
     public String step(int speed) {
-
+        //TODO in implementiation, don't execute step if any switch is unset;
     }
 
     public String exit() {

@@ -8,7 +8,8 @@ import java.util.TreeMap;
 
 public class CoordinateSystemMap {
     private TreeMap<Integer, TreeMap<Integer, Point>> map;
-    private ArrayList<Track> tracks;
+    //TODO change!!!
+    public ArrayList<Track> tracks;
 
 
     public CoordinateSystemMap() {
@@ -18,6 +19,7 @@ public class CoordinateSystemMap {
 
     //TODO maybe implement exception instead of boolean
     //TODO Maybe seperate add and replace and don't let other classes add points but instead only led CoodinateSystemMap add them
+    /*
     public boolean addOrReplacePoint(Coordinate coordinate, Point point) {
         if (!map.containsKey(coordinate.getX())) {
             map.put(coordinate.getX(), new TreeMap<Integer, Point>());
@@ -34,17 +36,26 @@ public class CoordinateSystemMap {
         return true;
 
     }
+     */
 
 
-    public boolean addTrack(Coordinate startPoint, Coordinate endPoint) {
+    public void addTrack(Coordinate startPointCoordinate, Coordinate endPointCoordinate) throws WrongCoordinatesException {
         Track track;
         try {
-            track = new Track(this, startPoint, endPoint);
+            track = new Track(this, startPointCoordinate, endPointCoordinate);
         } catch (WrongCoordinatesException e) {
-            return false;
+            throw new WrongCoordinatesException();
         }
-        tracks.add(track);
-        return true;
+        int countingVariable=0;
+        while (countingVariable<tracks.size()&&tracks.get(countingVariable)!=null){
+            countingVariable++;
+        }
+        if (countingVariable==tracks.size()){
+            tracks.add(null);
+        }
+        tracks.set(countingVariable,track);
+
+
 
     }
 
@@ -55,7 +66,7 @@ public class CoordinateSystemMap {
         } catch (TrackIsOccupiedException e) {
             return false;
         }
-        tracks.remove(track);
+        tracks.set (track.getTrackMaterialID()-1,null);
         return true;
 
     }
@@ -95,7 +106,7 @@ public class CoordinateSystemMap {
         return tracks.size();
     }
 
-    //TODO maybe add an getPoint(), that adds Points if they don't exist jets
+
 
     //TODO maybe implement exception instead of boolean
     public boolean removePoint(Coordinate coordinate) {
